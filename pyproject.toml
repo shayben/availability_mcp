@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=78.1.1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "availability-mcp"
+version = "0.1.0"
+description = "A local MCP server for user activity and idle information"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+dependencies = []
+
+[project.scripts]
+availability-mcp = "availability_mcp.server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
