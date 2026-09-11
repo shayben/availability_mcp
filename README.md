@@ -44,6 +44,34 @@ Returns:
 
 The optional `idle_threshold_seconds` argument must be non-negative.
 
+## Agent guidance and availability semantics
+
+`get_user_activity` reports a local input-activity signal, not evidence that
+the user is interruptible or available. Agents should use it as one signal
+when deciding whether to ask a non-urgent question, wait for feedback, or
+continue autonomously.
+
+- Treat recent input as `active`, but do not assume an active user is
+  available: they may be presenting, in a meeting, or focusing elsewhere.
+- Treat an idle reading as support for deferring non-urgent questions or
+  continuing reversible work autonomously, without inferring that the user
+  has left the device.
+- Recheck conservatively rather than polling continuously, for example every
+  60 seconds or longer.
+- If the source is unavailable, treat availability as unknown rather than
+  guessing.
+- The `systemd-logind` fallback provides a coarse active/idle signal; its
+  duration should not be treated as equivalent to an exact `xprintidle`
+  duration.
+- Do not store activity history or combine this signal with process, window,
+  keystroke, or screen data.
+
+For richer decisions, clients may combine this signal with explicit,
+user-controlled local preferences such as quiet hours, do-not-disturb status,
+preferred interruption behavior, and an autonomous-work time limit. Any
+future calendar integration should be opt-in and expose minimal busy/free
+status rather than event details.
+
 ## Platform support
 
 - **Windows:** `GetLastInputInfo`
